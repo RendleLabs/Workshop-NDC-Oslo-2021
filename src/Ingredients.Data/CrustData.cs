@@ -20,7 +20,7 @@ public class CrustData : ICrustData
     {
         try
         {
-            return await _client.QueryAsync<CrustEntity>().ToListAsync(token);
+            return await _client.QueryAsync<CrustEntity>(cancellationToken: token).ToListAsync(token);
         }
         catch (Exception ex)
         {

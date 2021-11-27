@@ -2,5 +2,5 @@ namespace Ingredients.Data;
 
 internal static class Constants
 {
-    public const string StorageConnectionString = "DefaultEndpointsProtocol=https;AccountName=itkonektworkshop;AccountKey=mJIcfYEO4GZZ24vMUheJE+x39ebIgmNEGd0hO/WxrER08TzMlzOqGhBxpSldOm36NlfT4KxTSaRKMFcp5iln2A==;EndpointSuffix=core.windows.net";
+    public const string StorageConnectionString = "DefaultEndpointsProtocol=https;AccountName=ndcoslo2021;AccountKey=tfqu7AvQXoGs8IUTBdXBb2DMshfm6xoX3eXy2FTj/Dv9qxe+VJV6NMMMMlrqLmEneAq/7tQsA98ZudF1lSwsOg==;EndpointSuffix=core.windows.net";
 }
