@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option csharp_namespace = "Ingredients.Protos";
+
+package ingredients;
+
+service IngredientsService {
+  rpc DecrementToppings(DecrementToppingsRequest) returns (DecrementToppingsResponse);
+  rpc DecrementCrusts(DecrementCrustsRequest) returns (DecrementCrustsResponse);
+}
+
+message DecrementToppingsRequest {
+  repeated string topping_ids = 1;
+}
+
+message DecrementToppingsResponse { }
+
+message DecrementCrustsRequest {
+  string crust_id = 1;
+}
+
+message DecrementCrustsResponse { }

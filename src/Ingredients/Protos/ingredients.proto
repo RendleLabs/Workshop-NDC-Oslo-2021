@@ -8,7 +8,9 @@ package ingredients;
 
 service IngredientsService {
   rpc GetToppings(GetToppingsRequest) returns (GetToppingsResponse);
+  rpc DecrementToppings(DecrementToppingsRequest) returns (DecrementToppingsResponse);
   rpc GetCrusts(GetCrustsRequest) returns (GetCrustsResponse);
+  rpc DecrementCrusts(DecrementCrustsRequest) returns (DecrementCrustsResponse);
 }
 
 message Topping {
@@ -34,3 +36,15 @@ message GetCrustsRequest { }
 message GetCrustsResponse {
   repeated Crust crusts = 1;
 }
+
+message DecrementToppingsRequest {
+  repeated string topping_ids = 1;
+}
+
+message DecrementToppingsResponse { }
+
+message DecrementCrustsRequest {
+  string crust_id = 1;
+}
+
+message DecrementCrustsResponse { }

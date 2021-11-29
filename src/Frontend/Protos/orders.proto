@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Orders.Protos";
+
+package orders;
+
+service OrderService {
+  rpc PlaceOrder (PlaceOrderRequest) returns (PlaceOrderResponse);
+}
+
+message PlaceOrderRequest {
+  string crust_id = 1;
+  repeated string topping_ids = 2;
+}
+
+message PlaceOrderResponse {
+  google.protobuf.Timestamp time = 1;
+}
