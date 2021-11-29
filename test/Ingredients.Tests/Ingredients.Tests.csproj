@@ -36,6 +36,7 @@
     <Protobuf Include="../../src/Ingredients/Protos/ingredients.proto" GrpcServices="Client">
       <Link>Protos/ingredients.proto</Link>
     </Protobuf>
+    <Protobuf Include="Protos/decimal.proto" GrpcServices="None"/>
   </ItemGroup>
 
 </Project>
