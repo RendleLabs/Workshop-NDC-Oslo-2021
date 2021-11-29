@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package customTypes;
+
+option csharp_namespace = "CustomTypes";
+
+message DecimalValue {
+  
+  int64 units = 1;
+  
+  int32 nanos = 2;
+  
+}

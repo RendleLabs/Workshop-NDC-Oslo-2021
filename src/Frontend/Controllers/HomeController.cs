@@ -23,13 +23,13 @@ public class HomeController : Controller
         var toppingsResponse = await _ingredientsClient.GetToppingsAsync(new GetToppingsRequest());
 
         var toppings = toppingsResponse.Toppings
-            .Select(t => new ToppingViewModel(t.Id, t.Name, Convert.ToDecimal(t.Price)))
+            .Select(t => new ToppingViewModel(t.Id, t.Name, t.Price))
             .ToList();
 
         var crustsResponse = await _ingredientsClient.GetCrustsAsync(new GetCrustsRequest());
 
         var crusts = crustsResponse.Crusts
-            .Select(c => new CrustViewModel(c.Id, c.Name, c.Size, Convert.ToDecimal(c.Price)))
+            .Select(c => new CrustViewModel(c.Id, c.Name, c.Size, c.Price))
             .ToList();
         
         var viewModel = new HomeViewModel(toppings, crusts);
