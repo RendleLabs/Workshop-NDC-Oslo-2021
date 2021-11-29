@@ -1,25 +1,31 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Frontend.Models;
+using Ingredients.Protos;
 
 namespace Frontend.Controllers;
 
 public class HomeController : Controller
 {
+    private readonly IngredientsService.IngredientsServiceClient _ingredientsClient;
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(
+        IngredientsService.IngredientsServiceClient ingredientsClient,
+        ILogger<HomeController> logger)
     {
+        _ingredientsClient = ingredientsClient;
         _logger = logger;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        var toppings = new List<ToppingViewModel>
-        {
-            new("cheese", "Cheese", 1m),
-            new("tomatosauce", "Tomato Sauce", 0.5m),
-        };
+        var toppingsResponse = await _ingredientsClient.GetToppingsAsync(new GetToppingsRequest());
+
+        var toppings = toppingsResponse.Toppings
+            .Select(t => new ToppingViewModel(t.Id, t.Name, Convert.ToDecimal(t.Price)))
+            .ToList();
+        
         var crusts = new List<CrustViewModel>
         {
             new("thin9", "Thin", 9, 5m),

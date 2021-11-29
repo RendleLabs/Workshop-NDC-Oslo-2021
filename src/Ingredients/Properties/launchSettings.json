@@ -1,11 +1,10 @@
 ﻿{
-  
   "profiles": {
-    "Frontend": {
+    "Ingredients": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "applicationUrl": "http://localhost:5000;https://localhost:5001",
+      "launchBrowser": false,
+      "applicationUrl": "http://localhost:5002;https://localhost:5003",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
