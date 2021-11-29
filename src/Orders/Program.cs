@@ -1,9 +1,12 @@
 using Ingredients.Protos;
+using Orders.PubSub;
 using Orders.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddGrpc();
+
+builder.Services.AddOrderPubSub();
 
 var ingredientsUri = builder.Configuration.GetServiceUri("Ingredients", "https")
                      ?? new Uri("https://localhost:5003");
