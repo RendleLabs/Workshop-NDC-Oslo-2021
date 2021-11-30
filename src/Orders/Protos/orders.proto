@@ -7,8 +7,8 @@ option csharp_namespace = "Orders.Protos";
 package orders;
 
 service OrderService {
-  rpc PlaceOrder (PlaceOrderRequest) returns (PlaceOrderResponse);
-  rpc Subscribe (SubscribeRequest) returns (stream OrderNotification);
+  rpc PlaceOrder(PlaceOrderRequest) returns (PlaceOrderResponse);
+  rpc Subscribe(SubscribeRequest) returns (stream OrderNotification);
 }
 
 message PlaceOrderRequest {
@@ -20,9 +20,7 @@ message PlaceOrderResponse {
   google.protobuf.Timestamp time = 1;
 }
 
-message SubscribeRequest {
-  
-}
+message SubscribeRequest { }
 
 message OrderNotification {
   string crust_id = 1;

@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingredients
+  namespace: pizza
+spec:
+  selector:
+    matchLabels:
+      app: ingredients
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ingredients
+    spec:
+      containers:
+      - name: ingredients
+        image: local/ingredients:latest
+        imagePullPolicy: Never
+        resources:
+          limits:
+            memory: '128Mi'
+            cpu: '500m'
+        ports:
+        - containerPort: 80
+        # readinessProbe:
+        #   exec:
+        #     command: ['/bin/grpc_health_probe', '-addr=:80', '-service', 'Ingredients', '-rpc-timeout', '5000ms']
+        #   initialDelaySeconds: 5
+        # livenessProbe:
+        #   exec:
+        #     command: ['/bin/grpc_health_probe', '-addr=:80', '-service', 'Ingredients', '-rpc-timeout', '5000ms']
+        #   initialDelaySeconds: 10
+        #   periodSeconds: 10
+        env:
+        - name: DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT
+          value: 'true'
+        - name: Jaeger__ServiceName
+          value: 'ingredients'
+        - name: Jaeger__Host
+          value: 'jaeger-agent'
+        - name: Jaeger__Port
+          value: '6831'
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingredients
+  namespace: pizza
+spec:
+  selector:
+    app: ingredients
+  ports:
+  - port: 80

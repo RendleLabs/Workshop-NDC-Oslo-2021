@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders
+  namespace: pizza
+spec:
+  selector:
+    matchLabels:
+      app: orders
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: orders
+    spec:
+      containers:
+      - name: orders
+        image: local/orders:latest
+        imagePullPolicy: Never
+        resources:
+          limits:
+            memory: '128Mi'
+            cpu: '500m'
+        ports:
+        - containerPort: 80
+        env:
+        - name: DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT
+          value: 'true'
+        - name: Service__Ingredients__Host
+          value: 'ingredients'
+        - name: Service__Ingredients__Port
+          value: '80'
+        - name: Service__Ingredients__Protocol
+          value: 'http'
+        - name: Jaeger__ServiceName
+          value: 'orders'
+        - name: Jaeger__Host
+          value: 'jaeger-agent'
+        - name: Jaeger__Port
+          value: '6831'
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: orders
+  namespace: pizza
+spec:
+  selector:
+    app: orders
+  ports:
+  - port: 80

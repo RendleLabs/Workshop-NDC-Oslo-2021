@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-var ingredientsUri = builder.Configuration.GetServiceUri("Ingredients", "https")
+var ingredientsUri = builder.Configuration.GetServiceUri("Ingredients")
     ?? new Uri("https://localhost:5003");
 
 builder.Services.AddGrpcClient<IngredientsService.IngredientsServiceClient>(options =>
@@ -14,7 +14,7 @@ builder.Services.AddGrpcClient<IngredientsService.IngredientsServiceClient>(opti
     options.Address = ingredientsUri;
 });
 
-var ordersUri = builder.Configuration.GetServiceUri("Orders", "https")
+var ordersUri = builder.Configuration.GetServiceUri("Orders")
                 ?? new Uri("https://localhost:5005");
 
 builder.Services.AddGrpcClient<OrderService.OrderServiceClient>(options =>
@@ -28,11 +28,8 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
 }
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
