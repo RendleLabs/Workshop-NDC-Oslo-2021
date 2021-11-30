@@ -37,10 +37,7 @@ public static class HostBuilderExtensions
 
             if (connectionMultiplexer is not null)
             {
-                tracing.AddRedisInstrumentation(connectionMultiplexer, options =>
-                {
-                    options.FlushInterval
-                });
+                tracing.AddRedisInstrumentation(connectionMultiplexer);
             }
 
             if (sources is { Length: > 0 })

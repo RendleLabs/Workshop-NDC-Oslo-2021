@@ -94,6 +94,11 @@ internal class IngredientsImpl : IngredientsService.IngredientsServiceBase
 
     public override async Task<DecrementToppingsResponse> DecrementToppings(DecrementToppingsRequest request, ServerCallContext context)
     {
+        if (request.ToppingIds.Count == 0)
+        {
+            throw new RpcException(
+                new Status(StatusCode.InvalidArgument, "At least one topping_id should be specified"));
+        }
         foreach (var toppingId in request.ToppingIds)
         {
             await _toppingData.DecrementStockAsync(toppingId);

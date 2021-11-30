@@ -25,15 +25,15 @@ spec:
             cpu: '500m'
         ports:
         - containerPort: 80
-        # readinessProbe:
-        #   exec:
-        #     command: ['/bin/grpc_health_probe', '-addr=:80', '-service', 'Ingredients', '-rpc-timeout', '5000ms']
-        #   initialDelaySeconds: 5
-        # livenessProbe:
-        #   exec:
-        #     command: ['/bin/grpc_health_probe', '-addr=:80', '-service', 'Ingredients', '-rpc-timeout', '5000ms']
-        #   initialDelaySeconds: 10
-        #   periodSeconds: 10
+        readinessProbe:
+          exec:
+            command: ['/bin/grpc_health_probe', '-addr=:80', '-service', 'Ingredients', '-rpc-timeout', '5000ms']
+          initialDelaySeconds: 5
+        livenessProbe:
+          exec:
+            command: ['/bin/grpc_health_probe', '-addr=:80', '-service', 'Ingredients', '-rpc-timeout', '5000ms']
+          initialDelaySeconds: 10
+          periodSeconds: 10
         env:
         - name: DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT
           value: 'true'
