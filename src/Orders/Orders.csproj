@@ -8,10 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
     <PackageReference Include="Microsoft.Tye.Extensions.Configuration" Version="0.10.0-alpha.21420.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AuthHelp\AuthHelp.csproj" />
     <ProjectReference Include="..\Orders.PubSub\Orders.PubSub.csproj" />
   </ItemGroup>
 
