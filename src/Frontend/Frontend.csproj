@@ -28,4 +28,8 @@
     </Protobuf>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AuthHelp\AuthHelp.csproj" />
+  </ItemGroup>
+
 </Project>

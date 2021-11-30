@@ -1,7 +1,9 @@
 using System.Net.Http.Headers;
+using AuthHelp;
 using Frontend.Auth;
 using Grpc.Core;
 using Ingredients.Protos;
+using Microsoft.Extensions.DependencyInjection;
 using Orders.Protos;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,10 +14,19 @@ builder.Services.AddControllersWithViews();
 var ingredientsUri = builder.Configuration.GetServiceUri("Ingredients", "https")
                      ?? new Uri("https://localhost:5003");
 
+builder.Services.AddHttpClient("ingredients")
+    .ConfigurePrimaryHttpMessageHandler(DevelopmentModeCertificateHelper.CreateClientHandler);
+
 builder.Services.AddGrpcClient<IngredientsService.IngredientsServiceClient>(options =>
 {
     options.Address = ingredientsUri;
-});
+})
+    .ConfigureChannel(((provider, channel) =>
+    {
+        channel.HttpHandler = null;
+        channel.HttpClient = provider.GetRequiredService<IHttpClientFactory>().CreateClient("ingredients");
+        channel.DisposeHttpClient = true;
+    }));
 
 var ordersUri = builder.Configuration.GetServiceUri("Orders", "https")
                 ?? new Uri("https://localhost:5005");

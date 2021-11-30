@@ -10,4 +10,11 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="client.pfx" />
+    <EmbeddedResource Include="client.pfx" />
+    <None Remove="server.pfx" />
+    <EmbeddedResource Include="server.pfx" />
+  </ItemGroup>
+
 </Project>

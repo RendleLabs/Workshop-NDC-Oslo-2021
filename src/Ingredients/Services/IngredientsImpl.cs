@@ -2,6 +2,7 @@ using Grpc.Core;
 using Ingredients;
 using Ingredients.Data;
 using Ingredients.Protos;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Ingredients.Services;
 
