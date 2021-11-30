@@ -5,12 +5,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using StackExchange.Redis;
 
 namespace JaegerTracing;
 
 public static class HostBuilderExtensions
 {
-    public static WebApplicationBuilder AddJaegerTracing(this WebApplicationBuilder builder, params string[] sources)
+    public static WebApplicationBuilder AddJaegerTracing(this WebApplicationBuilder builder,
+        IConnectionMultiplexer? connectionMultiplexer, params string[] sources)
     {
         var name = builder.Configuration.GetValue<string>("Jaeger:ServiceName");
         var host = builder.Configuration.GetValue<string>("Jaeger:Host");
@@ -33,6 +35,14 @@ public static class HostBuilderExtensions
                 .AddHttpClientInstrumentation()
                 .AddGrpcClientInstrumentation();
 
+            if (connectionMultiplexer is not null)
+            {
+                tracing.AddRedisInstrumentation(connectionMultiplexer, options =>
+                {
+                    options.FlushInterval
+                });
+            }
+
             if (sources is { Length: > 0 })
             {
                 tracing.AddSource(sources);
@@ -46,5 +56,9 @@ public static class HostBuilderExtensions
         });
 
         return builder;
+    }
+    public static WebApplicationBuilder AddJaegerTracing(this WebApplicationBuilder builder, params string[] sources)
+    {
+        return AddJaegerTracing(builder, null, sources);
     }
 }

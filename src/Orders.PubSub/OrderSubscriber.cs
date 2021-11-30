@@ -15,11 +15,11 @@ public class OrderSubscriber : BackgroundService
     private readonly OrderMessages _orderMessages;
     private readonly ILogger<OrderSubscriber> _log;
 
-    public OrderSubscriber(OrderMessages orderMessages, ILogger<OrderSubscriber> log)
+    public OrderSubscriber(IConnectionMultiplexer redis, OrderMessages orderMessages, ILogger<OrderSubscriber> log)
     {
         _orderMessages = orderMessages;
         _log = log;
-        _redis = ConnectionMultiplexer.Connect(Constants.ConnectionString);
+        _redis = redis;
         _sub = _redis.GetSubscriber();
     }
 

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Ingredients.Protos;
@@ -8,6 +9,7 @@ namespace Orders.Services;
 
 public class OrdersImpl : OrderService.OrderServiceBase
 {
+    private static readonly ActivitySource Source = new ActivitySource("Orders");
     private readonly IngredientsService.IngredientsServiceClient _ingredients;
     private readonly IOrderPublisher _orderPublisher;
     private readonly IOrderMessages _orderMessages;
@@ -26,17 +28,25 @@ public class OrdersImpl : OrderService.OrderServiceBase
 
     public override async Task<PlaceOrderResponse> PlaceOrder(PlaceOrderRequest request, ServerCallContext context)
     {
-        var decrementToppingsRequest = new DecrementToppingsRequest
+        using (var activity = Source.StartActivity("DecrementIngredients", ActivityKind.Internal))
         {
-            ToppingIds = {request.ToppingIds}
-        };
-        await _ingredients.DecrementToppingsAsync(decrementToppingsRequest);
+            activity?.AddTag("crust_id", request.CrustId);
+            activity?.AddTag("topping_ids", string.Join(' ', request.ToppingIds));
 
-        var decrementCrustsRequest = new DecrementCrustsRequest
-        {
-            CrustId = request.CrustId
-        };
-        await _ingredients.DecrementCrustsAsync(decrementCrustsRequest);
+            var decrementToppingsRequest = new DecrementToppingsRequest
+            {
+                ToppingIds = {request.ToppingIds}
+            };
+            var decrementToppingsTask = _ingredients.DecrementToppingsAsync(decrementToppingsRequest);
+
+            var decrementCrustsRequest = new DecrementCrustsRequest
+            {
+                CrustId = request.CrustId
+            };
+            var decrementIngredientsTask = _ingredients.DecrementCrustsAsync(decrementCrustsRequest);
+
+            await Task.WhenAll(decrementToppingsTask.ResponseAsync, decrementIngredientsTask.ResponseAsync);
+        }
 
         var now = DateTimeOffset.UtcNow;
 
@@ -48,7 +58,8 @@ public class OrdersImpl : OrderService.OrderServiceBase
         };
     }
 
-    public override async Task Subscribe(SubscribeRequest request, IServerStreamWriter<OrderNotification> responseStream, ServerCallContext context)
+    public override async Task Subscribe(SubscribeRequest request,
+        IServerStreamWriter<OrderNotification> responseStream, ServerCallContext context)
     {
         var token = context.CancellationToken;
 
@@ -73,7 +84,6 @@ public class OrdersImpl : OrderService.OrderServiceBase
                     await _orderPublisher.PublishOrder(message.CrustId, message.ToppingIds, message.Time);
                     throw;
                 }
-                
             }
             catch (OperationCanceledException)
             {

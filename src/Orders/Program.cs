@@ -1,19 +1,22 @@
 
+using System;
 using Ingredients.Protos;
+using JaegerTracing;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Orders.PubSub;
 using Orders.Services;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// builder.WebHost.AddJaegerTracing();
+var connectionMultiplexer = ConnectionMultiplexer.Connect(Constants.ConnectionString);
+builder.Services.AddOrderPubSub(connectionMultiplexer);
+builder.AddJaegerTracing(connectionMultiplexer, "Orders");
 
-// Additional configuration is required to successfully run gRPC on macOS.
-// For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
-
-// Add services to the container.
 builder.Services.AddGrpc();
 
-builder.Services.AddOrderPubSub();
 
 builder.Services.AddGrpcClient<IngredientsService.IngredientsServiceClient>((provider, options) =>
 {

@@ -28,4 +28,8 @@
     </Protobuf>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\JaegerTracing\JaegerTracing.csproj" />
+  </ItemGroup>
+
 </Project>

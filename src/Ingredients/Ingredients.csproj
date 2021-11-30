@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ingredients.Data\Ingredients.Data.csproj" />
+    <ProjectReference Include="..\JaegerTracing\JaegerTracing.csproj" />
   </ItemGroup>
 
 </Project>

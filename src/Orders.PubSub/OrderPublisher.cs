@@ -14,10 +14,10 @@ public class OrderPublisher : IOrderPublisher
     private readonly ISubscriber _sub;
     private readonly ILogger<OrderPublisher> _log;
 
-    public OrderPublisher(ILogger<OrderPublisher> log)
+    public OrderPublisher(IConnectionMultiplexer redis, ILogger<OrderPublisher> log)
     {
         _log = log;
-        _redis = ConnectionMultiplexer.Connect(Constants.ConnectionString);
+        _redis = redis;
         _sub = _redis.GetSubscriber();
     }
 
