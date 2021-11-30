@@ -7,9 +7,11 @@ spec:
   selector:
     matchLabels:
       app: ingredients
-  replicas: 1
+  replicas: 2
   template:
     metadata:
+      annotations:
+        linkerd.io/inject: enabled
       labels:
         app: ingredients
     spec:
