@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Ingredients.Protos;
@@ -28,6 +29,11 @@ public class OrdersImpl : OrderService.OrderServiceBase
     [Authorize]
     public override async Task<PlaceOrderResponse> PlaceOrder(PlaceOrderRequest request, ServerCallContext context)
     {
+        var httpContext = context.GetHttpContext();
+        var user = httpContext.User;
+        var name = user.FindFirst(ClaimTypes.Name)?.Value;
+        _logger.LogInformation("Order placed from {Name}", name);
+        
         var decrementToppingsRequest = new DecrementToppingsRequest
         {
             ToppingIds = {request.ToppingIds}

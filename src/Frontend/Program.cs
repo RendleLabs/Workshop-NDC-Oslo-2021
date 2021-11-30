@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using Frontend.Auth;
 using Grpc.Core;
 using Ingredients.Protos;
@@ -30,6 +31,13 @@ builder.Services.AddGrpcClient<OrderService.OrderServiceClient>(options =>
     {
         options.Address = ordersUri;
     })
+    // .ConfigureHttpClient((provider, client) =>
+    // {
+    //     // You can also configure authorization on the HttpClient
+    //     var authHelper = provider.GetRequiredService<AuthHelper>();
+    //     var token = authHelper.GetTokenAsync().GetAwaiter().GetResult();
+    //     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+    // })
     .ConfigureChannel((provider, channel) =>
     {
         var authHelper = provider.GetRequiredService<AuthHelper>();
